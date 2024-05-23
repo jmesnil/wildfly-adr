@@ -1,0 +1,28 @@
+---
+layout: default
+---
+
+<div class="home">
+  {%- if page.title -%}
+    <h1 class="page-heading">{{ page.title }}</h1>
+  {%- endif -%}
+
+  {{ content }}
+
+  {%- if site.adrs.size > 0 -%}
+    <h2 class="post-list-heading">{{ page.list_title | default: "Architecture Decision Records" }}</h2>
+    <ul>
+      {%- assign adrs = site.adrs | sort: "url" | reverse -%}
+      {%- for adr in adrs  -%}
+      <li>
+          {%- assign adr_index = adr.url | split: "/" | last | slice: 0,10 -%}
+          <a href="{{ adr.url | relative_url }}">[{{ adr_index}}] - 
+            {{ adr.title | escape }}
+          </a>
+      </li>
+      {%- endfor -%}
+    </ul>
+
+  {%- endif -%}
+
+</div>
