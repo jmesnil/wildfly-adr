@@ -26,7 +26,7 @@ jobs:
         uses: tj-actions/changed-files@v44
         with:
           files: |
-            _adrs/*
+            _adrs/**
       - name: Lint files that have changed
         if: steps.changed-adrs.outputs.test_any_changed == 'true'  
         env:
