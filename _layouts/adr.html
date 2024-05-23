@@ -1,0 +1,13 @@
+---
+layout: default
+---
+
+{%- assign adr_index = page.url | split: "/" | last | slice: 0,10 -%}
+
+<h1>[{{ adr_index }}] {{ page.title }}</h1>
+
+<ul>
+    <li>Author: <a href="https://github.com/{{ page.author }}">@{{ page.author }}</a></li>
+</ul>
+
+{{ content }}

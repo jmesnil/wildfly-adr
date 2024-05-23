@@ -1,9 +1,13 @@
 ---
 title:  "Initial Post"
-author: "@jmesnil"
+author: "jmesnil"
 ---
-# This is a test
 
+This is a test summary
+
+## This is the first decision
+
+This is a test
 [source,ruby]
 ----
 def print_hi(name)
