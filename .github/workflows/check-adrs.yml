@@ -1,0 +1,42 @@
+# This workflow uses actions that are not certified by GitHub.
+# They are provided by a third-party and are governed by
+# separate terms of service, privacy policy, and support
+# documentation.
+
+# Sample workflow for building and deploying a Jekyll site to GitHub Pages
+name: Check ADRS in pull requests
+
+on:
+  pull_request:
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+
+    permissions:
+      pull-requests: write
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+      - name: Setup Ruby
+        uses: ruby/setup-ruby@8575951200e472d5f2d95c625da0c7bec8217c42 # v1.161.0
+        with:
+          ruby-version: '3.1' # Not needed with a .ruby-version file
+          bundler-cache: true # runs 'bundle install' and caches installed gems automatically
+          cache-version: 0 # Increment this number if you need to re-download cached gems
+      - name: Get all ADRS files that have changed
+        id: changed-adrs
+        uses: tj-actions/changed-files@v44
+        with:
+          files: |
+            _adrs/**
+      - name: Check files that have changed
+        if: steps.changed-adrs.outputs.any_changed == 'true'  
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          ADRS_FILES: ${{ steps.changed-adrs.outputs.all_changed_files }}
+          PR_NUMBER: ${{ github.event.number }}
+        run: |
+          echo "Check all ADRS files that have changed: $ADRS_FILES"
+          ./scripts/check_adrs $PR_NUMBER $ADRS_FILES
