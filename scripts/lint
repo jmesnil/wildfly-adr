@@ -37,7 +37,7 @@ class MetadataChecker
     end
 end
 
-puts ARGV
+puts "Arguments: #{ARGV}"
 
 directory_path = '_adrs'
 # Check if the directory exists
