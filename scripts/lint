@@ -37,6 +37,8 @@ class MetadataChecker
     end
 end
 
+puts ARGV
+
 directory_path = '_adrs'
 # Check if the directory exists
 unless Dir.exist?(directory_path)
