@@ -37,25 +37,13 @@ class MetadataChecker
     end
 end
 
-puts "Arguments: #{ARGV}"
-
-directory_path = '_adrs'
-# Check if the directory exists
-unless Dir.exist?(directory_path)
-    puts "Directory '#{directory_path}' does not exist."
-    exit
-  end
-
-  # Get the list of all files in the directory
-files = Dir.entries(directory_path).select { |file| File.file?(File.join(directory_path, file)) }
-
 front_matter_extractor = FrontMatterExtractor.new
 metadata_checker = MetadataChecker.new
 
 linting_succeeds = true
 
-# Read and print the content of each file
-files.each do |file|
+# Read and print the content of each file passed as arguments
+ARGV.each do |file|
   file_path = File.join(directory_path, file)
   puts "Checking file: #{file_path}"
   
