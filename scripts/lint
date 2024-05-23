@@ -2,5 +2,62 @@
 
 ENV['BUNDLE_GEMFILE'] ||= File.expand_path('../Gemfile', __dir__)
 require 'bundler/setup'
+require 'fileutils'
+require 'yaml'
+
+class FrontMatterExtractor
+    def process lines
+      ## read the front matter from the lines
+      return reader if lines.empty?
+      front_matter = []
+      if lines.first.chomp == '---'
+        original_lines = lines.dup
+        lines.shift
+        while !lines.empty? && lines.first.chomp != '---'
+          front_matter << lines.shift
+        end
+  
+        return YAML.load(front_matter.join("\n"))
+      end
+
+      return {}
+    end
+  end
+
+class MetadataChecker
+    def check front_matter
+        puts "#{front_matter}"
+        if front_matter.key? "author"
+            puts "Author is #{front_matter["author"]}"
+        end
+    end
+end
+
+directory_path = '_adrs'
+# Check if the directory exists
+unless Dir.exist?(directory_path)
+    puts "Directory '#{directory_path}' does not exist."
+    exit
+  end
+
+  # Get the list of all files in the directory
+files = Dir.entries(directory_path).select { |file| File.file?(File.join(directory_path, file)) }
+
+front_matter_extractor = FrontMatterExtractor.new
+metadata_checker = MetadataChecker.new
+
+# Read and print the content of each file
+files.each do |file|
+  file_path = File.join(directory_path, file)
+  puts "Reading file: #{file_path}"
+  
+  begin
+    content = File.read(file_path)
+    front_matter = front_matter_extractor.process content.split("\n")
+    metadata_checker.check front_matter
+  rescue => e
+    puts "Error reading file #{file}: #{e.message}"
+  end
+end
 
 puts "Linting files"
