@@ -1,5 +1,5 @@
 ---
-titssle:  Initial Post
+title:  Initial Post
 author: jmesnil
 not_a_known_field: ""
 ---

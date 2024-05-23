@@ -1,6 +1,6 @@
 ---
 title:  Second decision
-autshor: jmesnil
+author: jmesnil
 reviewer: jmesnil
 ---
 # This is a second decision
