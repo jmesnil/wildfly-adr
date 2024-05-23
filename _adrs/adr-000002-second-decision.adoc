@@ -1,6 +1,6 @@
 ---
 title:  "Second decision"
-author: "jmesnil"
+autshor: "jmesnil"
 ---
 # This is a second decision
 

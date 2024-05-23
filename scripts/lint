@@ -26,10 +26,14 @@ class FrontMatterExtractor
 
 class MetadataChecker
     def check front_matter
-        puts "#{front_matter}"
-        if front_matter.key? "author"
-            puts "Author is #{front_matter["author"]}"
+        errors = []
+        unless front_matter.key? "title"
+            errors << "title is missing"
         end
+        unless front_matter.key? "author"
+            errors << "author is missing"
+        end
+        errors
     end
 end
 
@@ -46,18 +50,25 @@ files = Dir.entries(directory_path).select { |file| File.file?(File.join(directo
 front_matter_extractor = FrontMatterExtractor.new
 metadata_checker = MetadataChecker.new
 
+linting_succeeds = true
+
 # Read and print the content of each file
 files.each do |file|
   file_path = File.join(directory_path, file)
-  puts "Reading file: #{file_path}"
+  puts "Checking file: #{file_path}"
   
   begin
     content = File.read(file_path)
     front_matter = front_matter_extractor.process content.split("\n")
-    metadata_checker.check front_matter
+    errors = metadata_checker.check front_matter
+    if errors.length() > 0
+        puts "Front matter is not valid:\n#{front_matter}"
+        puts "Got errors: #{errors}"
+        linting_succeeds = false
+    end
   rescue => e
     puts "Error reading file #{file}: #{e.message}"
   end
 end
 
-puts "Linting files"
+exit(linting_succeeds)
