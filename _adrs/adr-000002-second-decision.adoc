@@ -1,6 +1,7 @@
 ---
-title:  "Second decision"
-autshor: "jmesnil"
+title:  Second decision
+autshor: jmesnil
+reviewer: jmesnil
 ---
 # This is a second decision
 

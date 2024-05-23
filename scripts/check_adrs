@@ -1,0 +1,78 @@
+#!/usr/bin/env ruby
+
+ENV['BUNDLE_GEMFILE'] ||= File.expand_path('../Gemfile', __dir__)
+require 'bundler/setup'
+require 'fileutils'
+require 'yaml'
+
+class FrontMatterExtractor
+  def process lines
+    return {} if lines.empty?
+
+    front_matter = []
+    if lines.first.chomp == '---'
+      original_lines = lines.dup
+      lines.shift
+      while !lines.empty? && lines.first.chomp != '---'
+        front_matter << lines.shift
+      end
+  
+      return YAML.load(front_matter.join("\n"))
+    end
+  end
+end
+
+class MetadataChecker
+  def check pr_number, front_matter
+    errors = []
+    if front_matter.key? "title"
+      system("gh pr edit #{pr_number} --remove-label missing-title")
+    else
+      errors << "title is missing"
+      system("gh pr edit #{pr_number} --add-label missing-title")
+    end
+    unless front_matter.key? "author"
+      errors << "author is missing"
+    end
+    if front_matter.key? "reviewer"
+      system("gh pr edit #{pr_number} --remove-label missing-reviewer")
+    else
+      errors << "reviewer is missing"
+      system("gh pr edit #{pr_number} --add-label missing-reviewer")
+    end
+
+    errors
+    end
+end
+
+front_matter_extractor = FrontMatterExtractor.new
+metadata_checker = MetadataChecker.new
+
+check_succeeds = true
+
+pr_number = ARGV[0]
+ARGV.shift
+
+# Read and print the content of each file passed as arguments
+ARGV.each do |file|
+  begin
+    content = File.read(file)
+    front_matter = front_matter_extractor.process content.split("\n")
+    errors = metadata_checker.check pr_number, front_matter
+    if errors.length() > 0
+      check_succeeds = false
+      puts "❌ #{file}"
+      puts "\tFront matter is not valid: #{front_matter}"
+      puts "\tGot errors:"
+      errors.each do |err|
+        puts "\t* #{err}"
+      end
+    else
+      puts "✅ #{file}"    
+    end
+  rescue => e
+    puts "Error reading file #{file}: #{e.message}"
+  end
+end
+
+exit(check_succeeds)
