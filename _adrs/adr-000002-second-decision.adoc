@@ -5,6 +5,7 @@ reviewer: jmesnil
 ---
 # This is a second decision
 
+This is a change
 [source,ruby]
 ----
 def print_hi(name)
