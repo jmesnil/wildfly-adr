@@ -27,7 +27,8 @@ description: >- # this means to ignore newlines until "baseurl:"
 baseurl: "/wildfly-adr" # the subpath of your site, e.g. /blog
 url: "https://jmesnil.github.io/" # the base hostname & protocol for your site, e.g. http://example.com
 twitter_username: WildFlyAS
-github_username:  wildfly
+github_username: wildfly
+github_project: jmesnil/wildfly-adr
 
 # Build settings
 theme: minima
