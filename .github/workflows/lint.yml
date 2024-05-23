@@ -28,7 +28,7 @@ jobs:
           files: |
             _adrs/**
       - name: Lint files that have changed
-        if: steps.changed-adrs.outputs.test_any_changed == 'true'  
+        if: steps.changed-adrs.outputs.any_changed == 'true'  
         env:
           ADRS_FILES: ${{ steps.changed-adrs.outputs.all_changed_files }}
         run: |
