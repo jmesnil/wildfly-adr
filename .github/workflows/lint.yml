@@ -23,6 +23,6 @@ jobs:
           cache-version: 0 # Increment this number if you need to re-download cached gems
       - name: Lint the changed ADRS
         run: |
-          files=$(git diff --name-status GITHUB_BASE_REF..GITHUB_HEAD_REF)
+          files=$(git diff --name-status $GITHUB_BASE_REF..$GITHUB_HEAD_REF)
           echo $files
           ./scripts/lint
